@@ -1,3 +1,4 @@
+// deployed via GitHub Actions
 function onEdit(e) {
   const sheet = e.source.getActiveSheet();
   if (sheet.getName() !== "log") return;

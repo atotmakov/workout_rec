@@ -187,3 +187,7 @@ function updateBalance() {
   
   balanceSheet.getRange("A1").setValue(finalBalance);
 }
+
+if (typeof module !== 'undefined') {
+  module.exports = { onEdit, onSelectionChange, processDailyWorkouts, updateBalance };
+}

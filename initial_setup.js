@@ -76,3 +76,7 @@ function setupTriggers() {
 
   Logger.log("Triggers installed.");
 }
+
+if (typeof module !== 'undefined') {
+  module.exports = { initializeSpreadsheet, setupTriggers };
+}

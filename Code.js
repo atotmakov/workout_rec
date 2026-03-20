@@ -148,6 +148,27 @@ function processDailyWorkouts() {
 }
 
 /**
+ * Run this function ONCE manually to install time-based triggers.
+ * processDailyWorkouts runs every hour, updateBalance runs every hour.
+ */
+function setupTriggers() {
+  // Remove existing triggers to avoid duplicates
+  ScriptApp.getProjectTriggers().forEach(t => ScriptApp.deleteTrigger(t));
+
+  ScriptApp.newTrigger("processDailyWorkouts")
+    .timeBased()
+    .everyHours(1)
+    .create();
+
+  ScriptApp.newTrigger("updateBalance")
+    .timeBased()
+    .everyHours(1)
+    .create();
+
+  Logger.log("Triggers installed.");
+}
+
+/**
  * Calculates the balance based on paid workouts vs. actual workouts performed.
  * Updates cell A1 in the "balance" tab.
  */

@@ -1,0 +1,7 @@
+node_modules/**
+tests/**
+jest.config.js
+package.json
+package-lock.json
+.github/**
+.gitignore

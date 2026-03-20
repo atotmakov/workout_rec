@@ -157,12 +157,14 @@ function setupTriggers() {
 
   ScriptApp.newTrigger("processDailyWorkouts")
     .timeBased()
-    .everyHours(1)
+    .everyDays(1)
+    .atHour(0)
     .create();
 
   ScriptApp.newTrigger("updateBalance")
     .timeBased()
-    .everyHours(1)
+    .everyDays(1)
+    .atHour(0)
     .create();
 
   Logger.log("Triggers installed.");

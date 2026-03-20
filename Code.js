@@ -1,4 +1,5 @@
 // deployed via GitHub Actions
+
 function onEdit(e) {
   const sheet = e.source.getActiveSheet();
   if (sheet.getName() !== "log") return;
@@ -123,8 +124,8 @@ function processDailyWorkouts() {
   // 3. Get existing workout dates to prevent duplicates
   const workoutData = workoutSheet.getDataRange().getValues();
   const workoutHeader = workoutData.shift();
-  const workoutDateColIndex = workoutHeader.indexOf("date");
-  
+  const workoutDateColIndex = workoutHeader.indexOf("Date");
+
   const existingDates = new Set(workoutData.map(row => {
     let d = row[workoutDateColIndex];
     return d instanceof Date ? Utilities.formatDate(d, ss.getSpreadsheetTimeZone(), "yyyy-MM-dd") : "";
@@ -139,35 +140,11 @@ function processDailyWorkouts() {
       let durationMs = group.max - group.min;
       let durationMinutes = Math.round(durationMs / (1000 * 60));
 
-      // Tuple: [date, duration, 0, 0]
-      let rowToInsert = [group.originalDate, durationMinutes, 0, 0];
+      let rowToInsert = [group.originalDate, durationMinutes, false];
       
       workoutSheet.appendRow(rowToInsert);
     }
   }
-}
-
-/**
- * Run this function ONCE manually to install time-based triggers.
- * processDailyWorkouts runs every hour, updateBalance runs every hour.
- */
-function setupTriggers() {
-  // Remove existing triggers to avoid duplicates
-  ScriptApp.getProjectTriggers().forEach(t => ScriptApp.deleteTrigger(t));
-
-  ScriptApp.newTrigger("processDailyWorkouts")
-    .timeBased()
-    .everyDays(1)
-    .atHour(0)
-    .create();
-
-  ScriptApp.newTrigger("updateBalance")
-    .timeBased()
-    .everyDays(1)
-    .atHour(0)
-    .create();
-
-  Logger.log("Triggers installed.");
 }
 
 /**
@@ -181,7 +158,7 @@ function updateBalance() {
   const moneySheet = ss.getSheetByName("money");
   const moneyData = moneySheet.getDataRange().getValues();
   const moneyHeader = moneyData.shift();
-  const paidColIndex = moneyHeader.indexOf("workouts");
+  const paidColIndex = moneyHeader.indexOf("Workouts");
   
   let totalPaidWorkouts = 0;
   if (paidColIndex !== -1) {
@@ -195,13 +172,11 @@ function updateBalance() {
   const workoutSheet = ss.getSheetByName("workout");
   const workoutData = workoutSheet.getDataRange().getValues();
   const workoutHeader = workoutData.shift();
-  const workAloneColIndex = workoutHeader.indexOf("work alone");
-  
+  const workAloneColIndex = workoutHeader.indexOf("Work alone");
+
   let totalPerformedWorkouts = 0;
   workoutData.forEach(row => {
-    // Only count if "work alone" is NOT "1"
-    // (Assuming row has data; skips completely empty rows)
-    if (row.join("").length > 0 && String(row[workAloneColIndex]) !== "1") {
+    if (row.join("").length > 0 && row[workAloneColIndex] !== true) {
       totalPerformedWorkouts++;
     }
   });
